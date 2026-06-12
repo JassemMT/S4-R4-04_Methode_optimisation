@@ -1,4 +1,4 @@
-package sae.image;
+package src.image;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
