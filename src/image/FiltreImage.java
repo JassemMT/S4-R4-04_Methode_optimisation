@@ -84,7 +84,7 @@ public class FiltreImage {
                     }
                 }
                 
-                // 4. On re-fusionne les 3 couleurs et on met le pixel sur la nouvelle image
+                // On re-fusionne les 3 couleurs et on met le pixel sur la nouvelle image
                 Color nouvelleCouleur = new Color(
                     Math.min(255, Math.max(0, (int) sommeRouge)), // Sécurité pour pas dépasser 255 (au minimum 255)
                     Math.min(255, Math.max(0, (int) sommeVert)),
