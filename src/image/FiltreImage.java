@@ -9,7 +9,9 @@ public class FiltreImage {
     /**
      * Crée un filtre "flou par moyenne" de taille taille x taille.
      * Tous les coefficients valent 1/(taille*taille).
-     * 
+     * Sert à préparer le filtre pour un tableau de taille 15 par exemple
+     * On prépare la moyenne avec un tableau de correspondance pour que sa soit plus optimisé
+     * Evite de diviser lorsqu'on fait la moyenne
      *
      * @param taille  taille du filtre (doit être impair, ex: 3, 5, 7)
      * @return        matrice de coefficients normalisée
