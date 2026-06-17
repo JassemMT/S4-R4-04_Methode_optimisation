@@ -2,5 +2,5 @@
 .vscode
 *.jar
 .idea
-.bin
+bin/
 target/
