@@ -1,7 +1,5 @@
 # Diagrammes du Projet
 
-Voici les diagrammes demandés pour modéliser le projet (Architecture, Classe et Séquence).
-
 ## 1. Diagramme d'Architecture
 
 Les différents modules (packages) du projet et leurs dépendances. L'interface utilisateur (`ui`) orchestre les autres modules pour le traitement d'image, le clustering et la classification des biomes.

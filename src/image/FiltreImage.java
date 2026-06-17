@@ -48,14 +48,19 @@ public class FiltreImage {
      * @return        matrice de coefficients normalisée
      */
     public static double[][] creerFiltreGaussien(int taille, double sigma) {
+        // On créer un filtre de taille x ( une petite fenetre dans notre grand tableau)
         double[][] filtre = new double[taille][taille];
+        // Le rayon est la distance entre le centre et le bord ( pour un filtre 3x3 , le rayon est 1)
         int rayon = taille / 2;
+        // Sert a normaliser le filtre
         double sommeTotale = 0; // Pour la normalisation
-        
         // 1. Calcul des valeurs de Gauss pour chaque case
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
-                // Distance par rapport au pixel central de la petite matrice
+                // Sert à décaler pour se mettre sur le centre
+                // Ex : 0.05   0.10   0.05
+                //      0.10   0.40   0.10
+                //      0.05   0.10   0.05
                 int x = i - rayon;
                 int y = j - rayon;
                 
@@ -98,10 +103,13 @@ public class FiltreImage {
         
         // Copie les pixels de bordure depuis l'image originale (ils ne peuvent pas être filtrés
         // car ils n'ont pas assez de voisins pour remplir la fenêtre du filtre)
+        // En gros on abandonne l'idée de flouter la bordure de l'image
+        // sert a "peindre le haut et le bas de l'image"
         for (int x = 0; x < largeur; x++) {
             for (int y = 0; y < rayon; y++)            nouvelleImage.setRGB(x, y, image.getRGB(x, y));
             for (int y = hauteur - rayon; y < hauteur; y++) nouvelleImage.setRGB(x, y, image.getRGB(x, y));
         }
+        // sert a peindre les bordure droite et gauche
         for (int y = rayon; y < hauteur - rayon; y++) {
             for (int x = 0; x < rayon; x++)            nouvelleImage.setRGB(x, y, image.getRGB(x, y));
             for (int x = largeur - rayon; x < largeur; x++) nouvelleImage.setRGB(x, y, image.getRGB(x, y));
@@ -121,6 +129,7 @@ public class FiltreImage {
                         
                         // Calcul des coordonnées du voisin
                         // Méthode optimisée : evite de refaire les calculs a chaque fois
+                        // Sert a recupere tout les voisins exmeple les 9 voisins
                         int voisinX = x + i - rayon;
                         int voisinY = y + j - rayon;
                         
@@ -139,7 +148,7 @@ public class FiltreImage {
                 
                 // On re-fusionne les 3 couleurs et on met le pixel sur la nouvelle image
                 Color nouvelleCouleur = new Color(
-                    Math.min(255, Math.max(0, (int) sommeRouge)), // Clamp entre 0 et 255
+                    Math.min(255, Math.max(0, (int) sommeRouge)), // Max 255 entre 0 et 255
                     Math.min(255, Math.max(0, (int) sommeVert)),
                     Math.min(255, Math.max(0, (int) sommeBleu))
                 );
