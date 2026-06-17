@@ -1,6 +1,6 @@
-## Menbres du groupe
-Nael Belaib
-Nicolas Claude
-Marius Valeur-Maselli
-Yanis Chebbah
-Jassem Tamourgh
+## Membres du groupe
+Nael Belaib  
+Nicolas Claude  
+Marius Valeur-Maselli  
+Yanis Chebbah  
+Jassem Tamourgh  
