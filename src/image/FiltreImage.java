@@ -22,6 +22,7 @@ public class FiltreImage {
     public static double[][] creerFiltreMoyenne(int taille) {
         // Définit une fenetre de 9 pixels .
         // Pour chaque pixel , on utilisera cette fonction ( par exemple si on met 3 en taille)
+        // Pour plus de précision il vaut mieux prendre une petite taille ( car on regarde moins loin)
         // Alors on va calculer pour chaque pixel ses 9 voisins et utiliser la moyenne pour déterminer une couleur
         double[][] filtre = new double[taille][taille];
         double valeur = 1.0 / (taille * taille);
@@ -31,6 +32,49 @@ public class FiltreImage {
                 filtre[i][j] = valeur;
             }
         }
+        return filtre;
+    }
+
+    // -------------------------------------------------------------------------
+    // Génération d'un filtre Gaussien (NxN)
+    // -------------------------------------------------------------------------
+
+    /**
+     * Crée un filtre de flou Gaussien.
+     * Donne plus de poids au centre et moins sur les bords.
+     *
+     * @param taille  taille du filtre (doit être impair)
+     * @param sigma   étalement de la courbe de Gauss (ex: 1.0 ou 2.0)
+     * @return        matrice de coefficients normalisée
+     */
+    public static double[][] creerFiltreGaussien(int taille, double sigma) {
+        double[][] filtre = new double[taille][taille];
+        int rayon = taille / 2;
+        double sommeTotale = 0; // Pour la normalisation
+        
+        // 1. Calcul des valeurs de Gauss pour chaque case
+        for (int i = 0; i < taille; i++) {
+            for (int j = 0; j < taille; j++) {
+                // Distance par rapport au pixel central de la petite matrice
+                int x = i - rayon;
+                int y = j - rayon;
+                
+                // Formule mathématique de Gauss
+                double valeur = (1.0 / (2.0 * Math.PI * sigma * sigma)) * Math.exp(-(x * x + y * y) / (2.0 * sigma * sigma));
+                filtre[i][j] = valeur;
+                sommeTotale += valeur; // On garde le total pour la suite
+            }
+        }
+        
+        // 2. Normalisation ! 
+        // Il faut que la somme totale du tableau fasse EXACTEMENT 1. 
+        // Sinon, l'image finale sera plus sombre ou plus claire que l'originale.
+        for (int i = 0; i < taille; i++) {
+            for (int j = 0; j < taille; j++) {
+                filtre[i][j] = filtre[i][j] / sommeTotale;
+            }
+        }
+        
         return filtre;
     }
 
@@ -52,9 +96,18 @@ public class FiltreImage {
         // Sert a récupérer la distance entre le centre & le bord
         int rayon = tailleFiltre / 2; // Si taille=3, rayon=1. On ignore les bords de 1 pixel.
         
-        // On parcourt chaque pixel de l'image (sauf l'extrême bord pour pas déborder , car par exemple
-        // le pixel en haut a gauche n'a pas 9 voisins si taille = 3 donc impossible
-        // On refuse ainsi de se positionner sur un pixel qui n'a pas tous ses voisins
+        // Copie les pixels de bordure depuis l'image originale (ils ne peuvent pas être filtrés
+        // car ils n'ont pas assez de voisins pour remplir la fenêtre du filtre)
+        for (int x = 0; x < largeur; x++) {
+            for (int y = 0; y < rayon; y++)            nouvelleImage.setRGB(x, y, image.getRGB(x, y));
+            for (int y = hauteur - rayon; y < hauteur; y++) nouvelleImage.setRGB(x, y, image.getRGB(x, y));
+        }
+        for (int y = rayon; y < hauteur - rayon; y++) {
+            for (int x = 0; x < rayon; x++)            nouvelleImage.setRGB(x, y, image.getRGB(x, y));
+            for (int x = largeur - rayon; x < largeur; x++) nouvelleImage.setRGB(x, y, image.getRGB(x, y));
+        }
+
+        // Applique le filtre sur les pixels intérieurs (ceux qui ont tous leurs voisins)
         for (int x = rayon; x < largeur - rayon; x++) {
             for (int y = rayon; y < hauteur - rayon; y++) {
                 
@@ -86,7 +139,7 @@ public class FiltreImage {
                 
                 // On re-fusionne les 3 couleurs et on met le pixel sur la nouvelle image
                 Color nouvelleCouleur = new Color(
-                    Math.min(255, Math.max(0, (int) sommeRouge)), // Sécurité pour pas dépasser 255 (au minimum 255)
+                    Math.min(255, Math.max(0, (int) sommeRouge)), // Clamp entre 0 et 255
                     Math.min(255, Math.max(0, (int) sommeVert)),
                     Math.min(255, Math.max(0, (int) sommeBleu))
                 );

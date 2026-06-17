@@ -1,0 +1,12 @@
+src\clustering\KMeans.class
+src\distance\DistanceEuclidienne.class
+src\biome\BiomeLabeler.class
+src\distance\IDistance.class
+src\image\OutilCouleur.class
+src\biome\Biome.class
+src\clustering\IClustering.class
+src\image\FiltreImage.class
+src\image\SauvegardeImage.class
+src\distance\DistanceCIELAB.class
+src\clustering\DBSCAN.class
+src\ui\MainApp.class
