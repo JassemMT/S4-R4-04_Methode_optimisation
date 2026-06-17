@@ -13,12 +13,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.version>17.0.6</javafx.version>
     </properties>
-
-    <!-- Configuration pour utiliser ton dossier "src" actuel sans rien casser -->
     <build>
         <sourceDirectory>${project.basedir}</sourceDirectory>
         <plugins>
-            <!-- Plugin  pour lancer JavaFX avec un seul bouton -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
